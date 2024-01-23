@@ -10,7 +10,7 @@ Install the dependencies and just clone or copy the `ui` folder into your projec
 
 You need to add this property in your tailwind config if you wish to control the dark mode
 
-```json
+```js
 darkMode: "class",
 ```
 
