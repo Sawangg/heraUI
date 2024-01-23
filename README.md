@@ -1,10 +1,18 @@
 # HeraUI
 
-This is a beta UI library created on top of react-aria-components and TailwindCSS.
+This is UI library (currently in alpha) created on top of react-aria-components and TailwindCSS.
 
 ## Usage
 
-Just clone or copy the `ui` folder into your project and start importing the components. It has never been that easy!
+Install the dependencies and just clone or copy the `ui` folder into your project. Start importing the components, it has never been that easy!
+
+#### Dark mode
+
+You need to add this property in your tailwind config if you wish to control the dark mode
+
+```json
+darkMode: "class",
+```
 
 ## Dependencies
 
