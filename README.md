@@ -18,16 +18,16 @@ darkMode: "class",
 
 Here is a list of dependencies needed (currently only supporting TypeScript).
 
-```
+```sh
 npm i react-aria-components tailwindcss clsx
 ```
-```
+```sh
 yarn add react-aria-components tailwindcss clsx
 ```
-```
+```sh
 pnpm add react-aria-components tailwindcss clsx
 ```
-```
+```sh
 bun i react-aria-components tailwindcss clsx
 ```
 
