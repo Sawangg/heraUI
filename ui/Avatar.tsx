@@ -14,7 +14,7 @@ export const Avatar: React.FC<AvatarProps> = ({ initials, className, ...props })
     className={clsx(
       className,
       "inline-grid rounded-full align-middle *:col-start-1 *:row-start-1 *:rounded-full",
-      !props.src && "bg-zinc-900 text-white dark:bg-white dark:text-black",
+      !props.src && "dark:bg-white dark:text-black bg-zinc-900 text-white",
     )}
     data-slot="avatar"
   >
@@ -34,6 +34,6 @@ export const Avatar: React.FC<AvatarProps> = ({ initials, className, ...props })
         </text>
       </svg>
     )}
-    <span className="z-50 ring-1 ring-inset ring-black/5 dark:ring-white/5 forced-colors:outline" aria-hidden></span>
+    <span className="dark:ring-white/5 z-50 ring-1 ring-inset ring-black/5 forced-colors:outline" aria-hidden></span>
   </span>
 );

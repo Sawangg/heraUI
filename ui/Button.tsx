@@ -15,7 +15,7 @@ const colorClasses = {
   teal: "",
   cyan: "",
   sky: "",
-  blue: "",
+  blue: "text-white [--btn-bg:theme(colors.blue.600)] [--btn-border:theme(colors.blue.700/90%)] [--btn-hover-overlay:theme(colors.white/10%)] [--btn-icon:theme(colors.blue.400)] data-[active]:[--btn-icon:theme(colors.blue.300)] data-[hovered]:[--btn-icon:theme(colors.blue.300)]",
   indigo: "",
   violet: "",
   purple: "",
@@ -47,15 +47,15 @@ export const Button: React.FC<ButtonProps> = ({
     <RAButton
       className={clsx(
         className,
-        "relative isolate inline-flex select-none items-center justify-center gap-x-2 rounded-lg border border-transparent px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] text-base/6 font-semibold focus:outline-none data-[disabled]:opacity-50 data-[focused]:outline data-[focused]:outline-2 data-[focused]:outline-offset-2 data-[focused]:outline-blue-500 sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 dark:border-white/5 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hovered]:[--btn-icon:ButtonText]",
+        "dark:border-white/5 relative isolate inline-flex select-none items-center justify-center gap-x-2 rounded-lg border border-transparent px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] text-base/6 font-semibold focus:outline-none data-[disabled]:opacity-50 data-[focused]:outline data-[focused]:outline-2 data-[focused]:outline-offset-2 data-[focused]:outline-blue-500 sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hovered]:[--btn-icon:ButtonText]",
         // Icon
         "[&>[data-slot=icon]]:-mx-0.5 [&>[data-slot=icon]]:my-0.5 [&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-[--btn-icon] [&>[data-slot=icon]]:sm:my-1 [&>[data-slot=icon]]:sm:size-4",
         // Shadow & Border
         !outline &&
           !plain &&
-          "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:shadow after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] before:data-[disabled]:shadow-none after:data-[active]:bg-[--btn-hover-overlay] after:data-[hovered]:bg-[--btn-hover-overlay] after:data-[disabled]:shadow-none dark:before:hidden dark:after:-inset-px dark:after:rounded-lg",
+          "dark:before:hidden dark:after:-inset-px dark:after:rounded-lg before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:shadow after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] before:data-[disabled]:shadow-none after:data-[active]:bg-[--btn-hover-overlay] after:data-[hovered]:bg-[--btn-hover-overlay] after:data-[disabled]:shadow-none",
         // Color
-        !outline && !plain && "bg-[--btn-border] before:bg-[--btn-bg] dark:bg-[--btn-bg]",
+        !outline && !plain && "dark:bg-[--btn-bg] bg-[--btn-border] before:bg-[--btn-bg]",
         colorClasses[outline ? "outline" : plain ? "plain" : color],
       )}
       {...props}
