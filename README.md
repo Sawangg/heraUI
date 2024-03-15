@@ -1,6 +1,6 @@
 # HeraUI
 
-This is UI library (currently in alpha) created on top of react-aria-components and TailwindCSS.
+This is a UI library (currently in alpha) created on top of react-aria-components and TailwindCSS.
 
 ## Usage
 
