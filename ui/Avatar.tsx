@@ -1,5 +1,4 @@
-import Image from "next/image";
-import clsx from "clsx";
+import { cn } from "@ui/primitives/utils.ts";
 import { AspectRatio } from "./primitives/AspectRatio";
 
 export type AvatarProps = Omit<
@@ -9,18 +8,18 @@ export type AvatarProps = Omit<
   "width" | "height" | "ref"
 >;
 
-export const Avatar: React.FC<AvatarProps> = ({ initials, className, ...props }) => (
+export const Avatar: React.FC<AvatarProps> = ({ initials, className, children, ...props }) => (
   <span
-    className={clsx(
+    className={cn(
       className,
       "inline-grid rounded-full align-middle *:col-start-1 *:row-start-1 *:rounded-full",
-      !props.src && "dark:bg-white dark:text-black bg-zinc-900 text-white",
+      !props.src && !children && "dark:bg-white dark:text-black bg-zinc-900 text-white",
     )}
     data-slot="avatar"
   >
-    {props.src ? (
+    {props.src || children ? (
       <AspectRatio ratio={1 / 1}>
-        <Image className="rounded-full" src={props.src} alt={props.alt ?? ""} {...props} fill />
+        {children}
       </AspectRatio>
     ) : (
       <svg

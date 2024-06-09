@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "./primitives/utils";
 import { Modal, ModalOverlay, Dialog as RADialog, type DialogProps as RADialogProps } from "react-aria-components";
 
 export const sizes = {
@@ -28,7 +28,7 @@ export const Alert: React.FC<AlertProps> = ({ open, onOpenChange, size = "md", c
   >
     <Modal className={({ isEntering }) => (isEntering ? "row-start-2 duration-300 ease-out" : "row-start-2")}>
       <RADialog
-        className={clsx(
+        className={cn(
           "dark:bg-zinc-900 dark:ring-white/10 w-full rounded-2xl bg-white p-8 shadow-lg outline-none ring-1 ring-zinc-950/10 sm:rounded-2xl sm:p-6",
           sizes[size],
           className,
@@ -46,7 +46,7 @@ export type AlertFooterProps = React.DetailedHTMLProps<React.HTMLAttributes<HTML
 
 export const AlertFooter: React.FC<AlertFooterProps> = ({ children, className, ...props }) => (
   <div
-    className={clsx(
+    className={cn(
       "mt-6 flex flex-col-reverse items-center justify-end gap-3 *:w-full sm:mt-4 sm:flex-row sm:*:w-auto",
       className,
     )}

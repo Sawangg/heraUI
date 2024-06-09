@@ -1,4 +1,6 @@
-import clsx from "clsx";
+"use client";
+
+import { cn } from "./primitives/utils.ts";
 import { Button as RAButton, type ButtonProps as RAButtonProps } from "react-aria-components";
 
 const colorClasses = {
@@ -33,6 +35,7 @@ export type ButtonProps = RAButtonProps & {
   color?: keyof typeof colorClasses;
   outline?: boolean;
   plain?: boolean;
+  none?: boolean,
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -45,18 +48,20 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <RAButton
-      className={clsx(
-        className,
-        "dark:border-white/5 relative isolate inline-flex select-none items-center justify-center gap-x-2 rounded-lg border border-transparent px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] text-base/6 font-semibold focus:outline-none data-[disabled]:opacity-50 data-[focused]:outline data-[focused]:outline-2 data-[focused]:outline-offset-2 data-[focused]:outline-blue-500 sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hovered]:[--btn-icon:ButtonText]",
+      className={cn(
+        // Base
+        "relative isolate inline-flex select-none items-center justify-center gap-x-2 rounded-lg border border-transparent px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] text-base/6 font-semibold focus:outline-none data-[disabled]:opacity-50 data-[focused]:outline data-[focused]:outline-2 data-[focused]:outline-offset-2 data-[focused]:outline-blue-500 sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hovered]:[--btn-icon:ButtonText]",
         // Icon
         "[&>[data-slot=icon]]:-mx-0.5 [&>[data-slot=icon]]:my-0.5 [&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-[--btn-icon] [&>[data-slot=icon]]:sm:my-1 [&>[data-slot=icon]]:sm:size-4",
         // Shadow & Border
+        "dark:border-white/5",
         !outline &&
-          !plain &&
-          "dark:before:hidden dark:after:-inset-px dark:after:rounded-lg before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:shadow after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] before:data-[disabled]:shadow-none after:data-[active]:bg-[--btn-hover-overlay] after:data-[hovered]:bg-[--btn-hover-overlay] after:data-[disabled]:shadow-none",
+        !plain &&
+        "dark:before:hidden dark:after:-inset-px dark:after:rounded-lg before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:shadow after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] before:data-[disabled]:shadow-none after:data-[active]:bg-[--btn-hover-overlay] after:data-[hovered]:bg-[--btn-hover-overlay] after:data-[disabled]:shadow-none",
         // Color
         !outline && !plain && "dark:bg-[--btn-bg] bg-[--btn-border] before:bg-[--btn-bg]",
         colorClasses[outline ? "outline" : plain ? "plain" : color],
+        className,
       )}
       {...props}
     >
