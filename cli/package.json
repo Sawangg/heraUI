@@ -1,0 +1,43 @@
+{
+  "name": "@hera/cli",
+  "version": "0.0.1-beta",
+  "description": "The HeraUI cli to manage your components",
+  "license": "MIT",
+  "author": "Sawang",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sawangg/heraUI.git",
+    "directory": "cli"
+  },
+  "keywords": ["ui", "hera", "tailwind", "react-aria-components", "cli"],
+  "bugs": "https://github.com/Sawangg/heraUI/issues",
+  "files": "dist",
+  "exports": "./dist/index.js",
+  "bin": {
+    "hera": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "esbuild ./src/index.ts --outdir=dist --bundle --platform=node --minify",
+    "check": "biome check",
+    "check:fix": "biome check --write"
+  },
+  "dependencies": {
+    "chalk": "5.3.0",
+    "commander": "12.1.0",
+    "prompts": "2.4.2",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.1",
+    "@types/bun": "latest",
+    "@types/prompts": "^2.4.9",
+    "esbuild": "^0.21.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": "^18.17.1 || ^20.3.0 || >=21.0.0",
+    "bun": ">=1.0.0"
+  }
+}
