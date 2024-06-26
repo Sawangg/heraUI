@@ -1,0 +1,31 @@
+---
+import { HeaderMenu } from "@components/HeaderMenu";
+import { Divider } from "@ui/Divider";
+import { TextLink } from "@ui/Text";
+
+const { user } = Astro.locals;
+---
+
+<header
+  class="sticky top-0 z-40 w-full flex-none border-b dark:border-white/[0.2] p-2 backdrop-blur transition-colors duration-500 sm:px-4"
+>
+  <nav class="mx-auto flex max-w-7xl items-center justify-between">
+    <TextLink href="/" newTab={false} className="text-3xl no-underline">LM</TextLink>
+    <div class="flex items-center gap-x-3 md:gap-x-6">
+      <TextLink href="/" newTab={false} className="no-underline">About</TextLink>
+      <Divider className="h-7" vertical />
+      {!user ?
+        <TextLink href="/api/login/github" newTab={false} className="no-underline">Sign in</TextLink>
+        :
+        <section class="flex items-center gap-x-2 md:gap-x-4">
+          <HeaderMenu userImage={user.image} client:idle />
+          {/* <form method="post" action="/api/logout">
+            <Button type="submit" className="dark:text-red-700 dark:border-none dark:bg-transparent" client:only="react" aria-label="logout" plain>
+              <Fragment set:html={logout} />
+            </Button>
+          </form> */}
+        </section>
+      }
+    </div>
+  </nav>
+</header>
