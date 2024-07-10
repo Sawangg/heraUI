@@ -1,9 +1,10 @@
 import { exec } from "node:child_process";
-import { existsSync, lstatSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { appendFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { type Config, createConfig } from "@utils/config";
 import { error, info, success, warn } from "@utils/message";
-import { getPackageManager } from "@utils/packageManager";
+import { promptForPath } from "@utils/path";
+import { getProject } from "@utils/project";
 import chalk from "chalk";
 import { Command } from "commander";
 import prompts from "prompts";
@@ -13,12 +14,14 @@ const deps = ["react-aria-components", "tailwindcss", "tailwind-merge", "clsx"];
 
 const optionsSchema = z.object({
   cwd: z.string().default(process.cwd),
+  overwrite: z.boolean().default(false),
 });
 
 export const init = new Command()
   .name("init")
   .description("configure your project for hera")
   .option("-c, --cwd <cwd>", "the working directory. defaults to the current directory.", process.cwd())
+  .option("-o, --overwrite", "overwrite existing files.", false)
   .action(async (opts) => {
     const options = optionsSchema.parse(opts);
 
@@ -28,89 +31,104 @@ export const init = new Command()
       process.exit(1);
     }
 
-    // Check if there is a config already
-    if (existsSync(join(cwd, "hera.json"))) {
-      warn("An hera config was already found.");
-      const res = await prompts({ type: "confirm", name: "override", message: "Do you want to override it?" });
-      if (!res.override) {
-        info("Exiting.");
-        process.exit(0);
-      }
-      console.log("");
-    }
+    // Customize the experience according to the project structure
+    const project = getProject();
 
-    // Find the project package manager
-    const packageManager = getPackageManager(cwd);
-    if (!packageManager) {
+    if (!project.packageManager) {
       error(
         "Could not find a package manager to use. Are you sure you're in the root of the project you want to initialize?",
       );
       process.exit(1);
     }
-    info(`Package manager found: ${chalk.green(packageManager)}`);
+    info(`Package manager found: ${chalk.green(project.packageManager)}`);
 
-    const configData: Config = { directory: "" };
+    if (project.heraConf && !options.overwrite) {
+      warn("An hera config was already found.");
+      const res = await prompts({ type: "confirm", name: "override", message: "Do you want to override it?" });
+      console.log("");
+      if (!res.override) {
+        info("Exiting.");
+        process.exit(0);
+      }
+    }
+
+    const configData: Config = { directory: "", utils: "" };
 
     // Find the destination directory
-    const promptForPath = async () => {
-      const res = await prompts({
-        type: "text",
-        name: "path",
-        message: "Enter a relative path to a directory to add your components",
-      });
-      if (!res.path) {
-        error("Incorrect path. Exiting.");
-        process.exit(1);
-      }
-      const fullPath = join(cwd, res.path);
-      if (existsSync(fullPath) && lstatSync(fullPath).isDirectory()) {
-        configData.directory = res.path;
-        console.log("");
-      } else {
-        error(`Couldn't find the destination ${fullPath}. Exiting.`);
-        process.exit(1);
-      }
-    };
-
-    if (existsSync(join(cwd, "src", "ui")) && lstatSync(join(cwd, "src", "ui")).isDirectory()) {
-      info("Found the directory src/ui.");
+    if (project.uiDir) {
+      info(`Found the directory ${project.srcDir ? "src/ui" : "ui"}.`);
       const confirm = await prompts({
         type: "confirm",
-        name: "defaultDirectory",
+        name: "uiDir",
         message: "Do you want to use it to add components?",
       });
-      if (confirm.defaultDirectory) {
-        configData.directory = "src/ui";
-        console.log("");
-      } else {
-        await promptForPath();
+      if (confirm.uiDir) {
+        configData.directory = project.srcDir ? "./src/ui" : "./ui";
       }
+      console.log("");
     } else {
       warn("Couldn't find a default ui directory.");
-      await promptForPath();
     }
+    if (!configData.directory) {
+      configData.directory = await promptForPath("Enter a relative path to a directory to add your components", true);
+    }
+
+    // Find the utils file
+    if (project.utilsFile) {
+      info(`Found the ${project.srcDir ? "src/lib/utils.ts" : "lib/utils.ts"} file.`);
+      const confirm = await prompts({
+        type: "confirm",
+        name: "defaultUtils",
+        message: "Do you want to append our config to it?",
+      });
+      if (confirm.defaultUtils) {
+        configData.utils = project.srcDir ? "./src/lib/utils.ts" : "./lib/utils.ts";
+        console.log("");
+      }
+    } else {
+      warn("Couldn't find the default utils file.");
+    }
+    if (!configData.utils) {
+      const path = await promptForPath("Enter the path of a file you want to add the utils to");
+      if (path.split(".").pop()?.toLowerCase() !== "ts") {
+        error("The file doesn't end with the .ts extension. Exiting.");
+        process.exit(1);
+      }
+      configData.utils = path;
+    }
+
+    // Write the utils content
+    const utilsContent =
+      '\nimport { type ClassValue, clsx } from "clsx";\nimport { twMerge } from "tailwind-merge";\n\nexport const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));';
+
+    console.log(
+      `${chalk.cyan(" ")} Appending to ${chalk.cyan(configData.utils)}\n ${chalk.bgRgb(28, 68, 40).bold(utilsContent.replaceAll("\n", "\n+ "))}\n`,
+    );
+
+    // TODO: Handle dupplicate code inside the file if the command is run twice
+    appendFileSync(configData.utils, utilsContent);
 
     // Create the config
-    const configPrompt = await prompts({
-      type: "confirm",
-      name: "creation",
-      message:
-        "Do you want to save your configuration? If you don't you'll have to provide it manually on each component addition",
-    });
-    if (configPrompt.creation) {
-      await createConfig(cwd, configData);
-      console.log("");
-      info(`Config ${chalk.cyan("hera.json")} successfully created!`);
-    } else {
-      console.log("");
-    }
+    //const configPrompt = await prompts({
+    //  type: "confirm",
+    //  name: "creation",
+    //  message:
+    //    "Do you want to save your configuration? If you don't you'll have to provide it manually on each component addition",
+    //});
+    //if (configPrompt.creation) {
+    await createConfig(cwd, configData);
+    console.log("");
+    info(`Config ${chalk.cyan("hera.json")} successfully created!`);
+    //} else {
+    // console.log("");
+    //}
 
-    // Install the dependencies
-    info(`Installing the dependencies with ${chalk.green(packageManager)} ...`);
+    // Install the dependencies to the project
+    info(`Installing the dependencies with ${chalk.green(project.packageManager)} ...`);
 
     try {
       await new Promise((resolve, reject) => {
-        exec(`${packageManager} ${packageManager === "npm" ? "install" : "add"} ${deps.join(" ")}`, (error, stdout) => {
+        exec(`${project.packageManager} install ${deps.join(" ")}`, (error, stdout) => {
           if (error) reject(error);
           else resolve(stdout);
         });
@@ -120,5 +138,6 @@ export const init = new Command()
       process.exit(1);
     }
 
-    success("⚡Congrats, your project is now ready to have components added!");
+    success("⚡Congrats, your project is now ready to have components added to it!");
+    process.exit(0);
   });

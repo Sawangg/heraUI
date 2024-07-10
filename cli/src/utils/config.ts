@@ -7,6 +7,7 @@ import { z } from "zod";
 const configScheme = z.object({
   $schema: z.string().optional(),
   directory: z.string(),
+  utils: z.string(),
 });
 
 export type Config = z.infer<typeof configScheme>;

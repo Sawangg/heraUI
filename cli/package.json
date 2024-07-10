@@ -2,8 +2,9 @@
   "name": "@hera/cli",
   "version": "0.0.1-beta",
   "description": "The HeraUI cli to manage your components",
-  "license": "MIT",
+  "type": "module",
   "author": "Sawang",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Sawangg/heraUI.git",
@@ -17,7 +18,7 @@
     "hera": "./dist/index.js"
   },
   "scripts": {
-    "build": "esbuild ./src/index.ts --outdir=dist --bundle --platform=node --minify",
+    "build": "bun build src/index.ts --outdir=dist --bundle --target=node --minify --format=esm",
     "check": "biome check",
     "check:fix": "biome check --write"
   },
@@ -28,10 +29,9 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.1",
+    "@biomejs/biome": "1.8.3",
     "@types/bun": "latest",
-    "@types/prompts": "^2.4.9",
-    "esbuild": "^0.21.5"
+    "@types/prompts": "^2.4.9"
   },
   "peerDependencies": {
     "typescript": "^5.4.5"
