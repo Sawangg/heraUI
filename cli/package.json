@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sawangg/heraUI.git",
+    "url": "git+https://github.com/Sawangg/heraUI.git",
     "directory": "cli"
   },
   "keywords": ["ui", "hera", "tailwind", "react-aria-components", "cli"],
@@ -15,7 +15,7 @@
   "files": "dist",
   "exports": "./dist/index.js",
   "bin": {
-    "hera": "./dist/index.js"
+    "hera": "dist/index.js"
   },
   "scripts": {
     "build": "bun build src/index.ts --outdir=dist --bundle --target=node --minify --format=esm",

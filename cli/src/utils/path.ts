@@ -6,23 +6,23 @@ import prompts from "prompts";
 /**
  * Prompt the user for a relative path
  * @param message - The message you want to show up in the prompt
- * @param [directory=false] - Check if the path should be a directory, by default checks if it's a file
+ * @param [directory=false] - Check if the path should be a directory, by default checks if it's a valid file
  * @returns The relative path the user entered
  */
 export const promptForPath = async (message: string, directory = false): Promise<string> => {
-  const res = await prompts({
+  const prompt = await prompts({
     type: "text",
     name: "path",
     message,
   });
-  if (!res.path) {
+  if (!prompt.path) {
     error("Incorrect path. Exiting.");
     process.exit(1);
   }
-  const fullPath = join(res.path);
+  const fullPath = join(prompt.path);
   if (existsSync(fullPath) && (directory ? lstatSync(fullPath).isDirectory() : lstatSync(fullPath).isFile())) {
     console.log("");
-    return `./${res.path}`;
+    return `./${prompt.path}`;
   }
   error(`Couldn't find the destination ${fullPath}. Exiting.`);
   process.exit(1);

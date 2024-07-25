@@ -1,5 +1,4 @@
 ---
-import rss from "@assets/rss.svg?raw";
 import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading";
 import { Input } from "@ui/Input";
@@ -14,9 +13,6 @@ import { Text, TextLink } from "@ui/Text";
       <Button type="submit" client:visible>Subscribe</Button>
     </form>
     <div class="mt-4 flex items-center justify-center gap-x-2 sm:justify-start">
-      <TextLink href="/rss.xml" className="no-underline" aria-label="rss" data-astro-prefetch>
-        <Fragment set:html={rss} />
-      </TextLink>
       <Text className="text-sm">© Léo Mercier — {new Date().toLocaleDateString("en", { year: "numeric" })}</Text>
     </div>
   </section>

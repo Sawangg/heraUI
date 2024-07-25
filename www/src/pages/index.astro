@@ -6,12 +6,6 @@ import { Button } from "@ui/Button";
 import { Heading } from "@ui/Heading.tsx";
 import { Input } from "@ui/Input";
 import { Text, TextLink } from "@ui/Text.tsx";
-
-const allBlogPosts = await getCollection("blog", ({ data }) => data.draft !== true);
-
-const sortedPosts = allBlogPosts
-  .slice()
-  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
 ---
 
 <BaseLayout>
@@ -23,60 +17,6 @@ const sortedPosts = allBlogPosts
         find the latest post here either by joining my <TextLink href="/rss.xml">RSS feed</TextLink> or by subscribing to
         get my latest post directly in your inbox!
       </Text>
-      <form method="POST" class="flex w-full flex-col gap-y-3 sm:w-auto sm:max-w-lg sm:flex-row sm:gap-x-3">
-        <Input type="email" placeholder="Subscribe by email" required />
-        <Button type="submit" client:visible>Subscribe</Button>
-      </form>
-    </section>
-    <section
-      class="relative sm:ml-[calc(2rem+1px)] sm:pb-8 md:ml-[calc(3.5rem+1px)] lg:ml-[max(calc(14.5rem+1px),calc(100%-48rem))]"
-    >
-      <hr
-        class="absolute bottom-0 right-full top-3 mr-7 hidden h-auto border dark:border-white/[0.2] sm:block md:mr-[3.25rem]"
-      />
-      <ul class="space-y-12 sm:space-y-16">
-        {
-          sortedPosts.map((post) => (
-            <li>
-              <article class="relative">
-                <svg
-                  class="absolute right-full top-2 mr-6 hidden h-[calc(0.5rem+1px)] w-[calc(0.5rem+1px)] overflow-visible text-[#464649] sm:block md:mr-12"
-                  viewBox="0 0 9 9"
-                >
-                  <circle class="fill-white dark:fill-zinc-900" cx="4.5" cy="4.5" r="4.5" stroke="currentColor" stroke-width="2" />
-                </svg>
-                <a href={`/posts/${post.slug}`} class="relative block h-fit cursor-pointer rounded-md outline-none focus:ring-2 focus:ring-sky-500" data-astro-prefetch>
-                  <div class="pt-8 lg:pt-0">
-                    <Heading level={2} className="text-lg mb-1">
-                      {post.data.title}
-                    </Heading>
-                    <Text>{post.data.description}</Text>
-                    <ul class="mt-3 flex flex-row gap-x-2">
-                      {post.data.tags.map((tag) => (
-                        <li>
-                          <Badge color={tag.color as BadgeColor}>{tag.title}</Badge>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <dl class="absolute left-0 top-0 lg:left-auto lg:right-full lg:mr-[calc(6.5rem+1px)]">
-                    <dt class="sr-only">Date</dt>
-                    <dd class="whitespace-nowrap text-sm leading-6 text-zinc-500">
-                      <time datetime={post.data.publishedAt.toISOString()}>
-                        {post.data.publishedAt.toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </time>
-                    </dd>
-                  </dl>
-                </a>
-              </article>
-            </li>
-          ))
-        }
-      </ul>
     </section>
   </main>
 </BaseLayout>

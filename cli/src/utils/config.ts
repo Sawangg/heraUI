@@ -1,13 +1,15 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { FRAMEWORKS } from "@utils/constant";
 import { error } from "@utils/message";
 import { z } from "zod";
 
 const configScheme = z.object({
-  $schema: z.string().optional(),
+  $schema: z.string().url(),
   directory: z.string(),
   utils: z.string(),
+  framework: z.enum(FRAMEWORKS).optional(),
 });
 
 export type Config = z.infer<typeof configScheme>;

@@ -14,7 +14,7 @@ const { title, description } = Astro.props;
     <meta
       name="description"
       property="og:description"
-      content={description ?? "A blog created by Leo Mercier on tech subjects."}
+      content={description ?? "HeraUI is a next-gen UI library that integrate seamlessly in your codebase"}
     />
     <meta name="author" content="Léo Mercier" />
     <meta name="copyright" content="ISC" />
@@ -26,13 +26,11 @@ const { title, description } = Astro.props;
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large" />
 
-    <meta property="og:site_name" content="Léo Mercier's blog" />
-    <meta property="og:title" content={title ?? "Léo Mercier's blog"} />
+    <meta property="og:site_name" content="HeraUI" />
+    <meta property="og:title" content={title ?? "HeraUI"} />
     <meta property="og:type" content="website" />
 
-    <link rel="alternate" type="application/rss+xml" title="Léo Mercier's blog" href={`${Astro.site}rss.xml`} />
-
-    <title>{title ?? "Léo Mercier's blog"}</title>
+    <title>{title ?? "HeraUI"}</title>
   </head>
   <body class="min-h-screen overflow-x-hidden selection:bg-sky-500 selection:text-white">
     <Header />
@@ -40,48 +38,3 @@ const { title, description } = Astro.props;
     <Footer />
   </body>
 </html>
-
-<style is:global>
-@font-face {
-  font-family: 'Source Serif Pro';
-  src: url('/fonts/source-serif-pro/source-serif-pro.regular.woff2') format('woff2'),
-       url('/fonts/source-serif-pro/source-serif-pro.regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Source Serif Pro';
-  src: url('/fonts/source-serif-pro/source-serif-pro.bold.woff2') format('woff2'),
-       url('/fonts/source-serif-pro/source-serif-pro.bold.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-    font-family: 'Source Serif Pro';
-    src: url('/fonts/source-serif-pro/source-serif-pro.semibold.woff2') format('woff2'),
-         url('/fonts/source-serif-pro/source-serif-pro.semibold.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fira Code';
-  src: url('/fonts/fira-code/FiraCode.woff2') format('woff2-variations'),
-       url('/fonts/fira-code/FiraCode.woff') format('woff-variations');
-  font-weight: 300 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Remove the codeblock override in mdx */
-pre code {
-  border: none !important;
-  background-color: transparent !important;
-  padding: 0 !important;
-}
-</style>

@@ -1,8 +1,9 @@
 import { error } from "@utils/message";
 import { z } from "zod";
 
-const baseUrl = "https://raw.githubusercontent.com/shadcn-ui/ui";
+const baseUrl = process.env.REGISTRY_URL ?? "";
 
+// TODO: move to a common package
 export const registrySchema = z.array(
   z.object({
     name: z.string(),
@@ -11,7 +12,7 @@ export const registrySchema = z.array(
 );
 
 export const getRegistry = async () => {
-  const res = await fetch(`${baseUrl}/main/package.json`);
+  const res = await fetch(`${baseUrl}/api/registry`);
   if (!res.ok) {
     error("Could not get the registry. Exiting.");
     process.exit(1);

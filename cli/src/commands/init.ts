@@ -2,6 +2,7 @@ import { exec } from "node:child_process";
 import { appendFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { type Config, createConfig } from "@utils/config";
+import { DEPENDENCIES } from "@utils/constant";
 import { error, info, success, warn } from "@utils/message";
 import { promptForPath } from "@utils/path";
 import { getProject } from "@utils/project";
@@ -10,8 +11,6 @@ import { Command } from "commander";
 import prompts from "prompts";
 import { z } from "zod";
 
-const deps = ["react-aria-components", "tailwindcss", "tailwind-merge", "clsx"];
-
 const optionsSchema = z.object({
   cwd: z.string().default(process.cwd),
   overwrite: z.boolean().default(false),
@@ -19,7 +18,7 @@ const optionsSchema = z.object({
 
 export const init = new Command()
   .name("init")
-  .description("configure your project for hera")
+  .description("configure your project for hera. Run it at the root of your project or specify a valid directory.")
   .option("-c, --cwd <cwd>", "the working directory. defaults to the current directory.", process.cwd())
   .option("-o, --overwrite", "overwrite existing files.", false)
   .action(async (opts) => {
@@ -52,7 +51,7 @@ export const init = new Command()
       }
     }
 
-    const configData: Config = { directory: "", utils: "" };
+    const configData: Config = { $schema: "", directory: "", utils: "" };
 
     // Find the destination directory
     if (project.uiDir) {
@@ -62,9 +61,7 @@ export const init = new Command()
         name: "uiDir",
         message: "Do you want to use it to add components?",
       });
-      if (confirm.uiDir) {
-        configData.directory = project.srcDir ? "./src/ui" : "./ui";
-      }
+      if (confirm.uiDir) configData.directory = project.srcDir ? "./src/ui" : "./ui";
       console.log("");
     } else {
       warn("Couldn't find a default ui directory.");
@@ -89,7 +86,7 @@ export const init = new Command()
       warn("Couldn't find the default utils file.");
     }
     if (!configData.utils) {
-      const path = await promptForPath("Enter the path of a file you want to add the utils to");
+      const path = await promptForPath("Enter the path of a Typescript file you want to add the utils to");
       if (path.split(".").pop()?.toLowerCase() !== "ts") {
         error("The file doesn't end with the .ts extension. Exiting.");
         process.exit(1);
@@ -108,27 +105,24 @@ export const init = new Command()
     // TODO: Handle dupplicate code inside the file if the command is run twice
     appendFileSync(configData.utils, utilsContent);
 
+    // Framework detection
+    if (!project.framework) {
+      warn("Couldn't find a supported framework. Skipping.");
+    } else {
+      info(`Found the supported framework ${chalk.green(project.framework)}.`);
+      configData.framework = project.framework;
+    }
+
     // Create the config
-    //const configPrompt = await prompts({
-    //  type: "confirm",
-    //  name: "creation",
-    //  message:
-    //    "Do you want to save your configuration? If you don't you'll have to provide it manually on each component addition",
-    //});
-    //if (configPrompt.creation) {
     await createConfig(cwd, configData);
-    console.log("");
     info(`Config ${chalk.cyan("hera.json")} successfully created!`);
-    //} else {
-    // console.log("");
-    //}
 
     // Install the dependencies to the project
     info(`Installing the dependencies with ${chalk.green(project.packageManager)} ...`);
 
     try {
       await new Promise((resolve, reject) => {
-        exec(`${project.packageManager} install ${deps.join(" ")}`, (error, stdout) => {
+        exec(`${project.packageManager} install ${DEPENDENCIES.join(" ")}`, (error, stdout) => {
           if (error) reject(error);
           else resolve(stdout);
         });

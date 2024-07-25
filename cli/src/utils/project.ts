@@ -1,13 +1,15 @@
 import { existsSync, lstatSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { z } from "zod";
+import { FRAMEWORKS, MANAGERS } from "@utils/constant";
 
 export const projectSchema = z.object({
   srcDir: z.boolean(),
   uiDir: z.boolean(),
   utilsFile: z.boolean(),
   heraConf: z.boolean(),
-  packageManager: z.enum(["npm", "yarn", "pnpm", "bun"]).nullable(),
+  packageManager: z.enum(Object.keys(MANAGERS) as [keyof typeof MANAGERS]).nullable(),
+  framework: z.enum(Object.keys(FRAMEWORKS) as [keyof typeof FRAMEWORKS]).optional(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
@@ -20,22 +22,29 @@ export const getProject = (): Project => {
       ? existsSync(resolve("./src/ui")) && lstatSync(resolve("./src/ui")).isDirectory()
       : existsSync("ui") && lstatSync(resolve("ui")).isDirectory(),
     utilsFile: srcDir ? existsSync(resolve("./src/lib/utils.ts")) : existsSync(resolve("./lib/utils.ts")),
-    heraConf: existsSync(join("hera.json")),
+    heraConf: existsSync(resolve("hera.json")),
     packageManager: getPackageManager(),
+    framework: getFramework(),
   };
 };
 
 const getPackageManager = () => {
-  const lockFiles: { [key: string]: string } = {
-    npm: "package-lock.json",
-    yarn: "yarn.lock",
-    pnpm: "pnpm-lock.yaml",
-    bun: "bun.lockb",
-  };
-
-  for (const [manager, file] of Object.entries(lockFiles)) {
-    if (existsSync(join(file))) return manager as "npm" | "yarn" | "pnpm" | "bun";
+  for (const manager in MANAGERS) {
+    const key = manager as keyof typeof MANAGERS;
+    if (existsSync(resolve(MANAGERS[key]))) return key;
   }
-
   return null;
+};
+
+const getFramework = () => {
+  const extensions = [".js", ".mjs", ".cjs", "ts"];
+  for (const framework in FRAMEWORKS) {
+    const key = framework as keyof typeof FRAMEWORKS;
+    for (const ext of extensions) {
+      const fileName = `${FRAMEWORKS[key]}${ext}`;
+      if (existsSync(resolve(fileName))) {
+        return key;
+      }
+    }
+  }
 };
