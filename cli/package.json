@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@types/bun": "latest",
+    "@types/bun": "^1.1.4",
     "@types/prompts": "^2.4.9"
   },
   "peerDependencies": {
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "engines": {
     "node": "^18.17.1 || ^20.3.0 || >=21.0.0",
